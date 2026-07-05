@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+*.local
+
+# Turbo
+.turbo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage
+playwright-report
+test-results
+
+# Logs
+*.log
+
+# Extension build
+extension/dist
