@@ -405,7 +405,7 @@ pnpm test && pnpm test:e2e
 
 ---
 
-<!-- ## Module Progress
+## Module Progress
 
 | # | Module | Version | Status | Key Deliverables |
 |---|--------|---------|--------|-----------------|
@@ -422,7 +422,7 @@ pnpm test && pnpm test:e2e
 | 11 | Threat Modeling | v0.11 | ⚠️ ~85% | STRIDE + OWASP doc |
 | 12 | Production Release | v1.0 | ⚠️ ~55% | Firefox manifest, LICENSE |
 
-**Overall: ~72%** · 1 complete · 10 partial · 1 missing (real remote sync) -->
+**Overall: ~72%** · 1 complete · 10 partial · 1 missing (real remote sync)
 
 ---
 
