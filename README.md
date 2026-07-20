@@ -1,39 +1,6 @@
 # Password Manager
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Chrome Extension](https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-
-A **zero-knowledge Manifest V3 Chrome extension password manager** with encrypted vault storage, secure autofill, TOTP authenticator, WebAuthn passkeys, and security auditing — built with the **Web Crypto API** and a security-focused **Turborepo monorepo**.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Chrome Extension Surfaces](#chrome-extension-surfaces)
-- [Browser APIs Used](#browser-apis-used)
-- [Security Architecture](#security-architecture)
-- [Project Structure](#project-structure)
-- [Package Map](#package-map)
-- [Getting Started](#getting-started)
-- [Usage Guide](#usage-guide)
-- [Development](#development)
-- [Testing](#testing)
-- [Architecture](#architecture)
-- [Message Passing](#message-passing)
-- [Module Progress](#module-progress)
-- [Threat Model](#threat-model)
-- [CI/CD](#cicd)
-- [Browser Support](#browser-support)
-- [Interview Highlights](#interview-highlights)
-- [Remaining Work](#remaining-work)
-- [Documentation](#documentation)
-- [License](#license)
+A zero-knowledge Manifest V3 Chrome extension password manager with encrypted vault storage, secure autofill, TOTP authenticator, WebAuthn passkeys, and security auditing. Built with the Web Crypto API and a security-focused Turborepo monorepo.
 
 ---
 
@@ -47,26 +14,23 @@ Store credentials encrypted at rest with **AES-256-GCM + PBKDF2**. Generate stro
 
 ## Features
 
-| Feature | Status | Implementation |
-|---------|--------|----------------|
-| AES-256-GCM vault encryption | ✅ | Web Crypto API, 600k PBKDF2 iterations |
-| Credential CRUD | ✅ | Add, list, delete via popup/options |
-| Password generator | ✅ | CSPRNG + Diceware + strength meter |
-| Passphrase generator | ✅ | Diceware word list |
-| Security audit (reuse, weak) | ✅ | Local analysis in `@pwm/security-audit` |
-| HIBP breach check | ✅ | SHA-1 k-anonymity (5-char prefix only) |
-| Form detection | ⚠️ | Shadow DOM, SPA, `all_frames: true` |
-| Secure autofill | ⚠️ | Origin + homograph checks in fill flow |
-| TOTP generation | ✅ | RFC 6238 compliant |
-| TOTP import (otpauth://) | ⚠️ | Options UI; no backup codes |
-| WebAuthn passkeys | ⚠️ | Options registration + vault storage |
-| Folders & secure notes | ⚠️ | APIs + Options UI; no attachments |
-| Auto-lock timer | ✅ | Configurable inactivity lock |
-| Clipboard auto-clear | ✅ | Clears copied passwords after 30s |
-| Encrypted sync | ❌ | Simulated via `chrome.storage.local` |
-| STRIDE + OWASP threat model | ✅ | `docs/threat-model.md` |
-| Firefox manifest | ✅ | `browser_specific_settings.gecko` |
-| Chrome Store release | ⚠️ | LICENSE + listing copy; no screenshots |
+- AES-256-GCM vault encryption (Web Crypto API, 600k PBKDF2 iterations)
+- Credential CRUD (Add, list, delete via popup/options)
+- Password generator (CSPRNG + Diceware + strength meter)
+- Passphrase generator (Diceware word list)
+- Security audit (reuse, weak)
+- HIBP breach check (SHA-1 k-anonymity)
+- Form detection (Shadow DOM, SPA, all_frames: true)
+- Secure autofill (Origin + homograph checks)
+- TOTP generation (RFC 6238 compliant)
+- TOTP import (otpauth://)
+- WebAuthn passkeys (Options registration + vault storage)
+- Folders & secure notes
+- Auto-lock timer
+- Clipboard auto-clear
+- STRIDE + OWASP threat model docs/threat-model.md
+- Firefox manifest (browser_specific_settings.gecko)
+- Chrome Store release (LICENSE + listing copy)
 
 ---
 
@@ -496,4 +460,4 @@ GitHub Actions on every push/PR to `main`:
 
 ## License
 
-[MIT](./LICENSE)
+Proprietary - All rights reserved.
