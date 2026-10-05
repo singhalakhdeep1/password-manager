@@ -2,8 +2,12 @@ export class VaultCrypto {
   static async generateRandomToken(length: number = 32): Promise<string> {
     const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
     let result = '';
-    for (let i = 0; i < length; i++) {
-      result += charset.charAt(Math.floor(Math.random() * charset.length));
+    const limit = Math.floor(0x100000000 / charset.length) * charset.length;
+    const buf = new Uint32Array(1);
+    while (result.length < length) {
+      globalThis.crypto.getRandomValues(buf);
+      // rejection sampling avoids modulo bias
+      if (buf[0] < limit) result += charset.charAt(buf[0] % charset.length);
     }
     return result;
   }
