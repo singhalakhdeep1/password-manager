@@ -7,7 +7,7 @@ export class VaultCrypto {
     while (result.length < length) {
       globalThis.crypto.getRandomValues(buf);
       // rejection sampling avoids modulo bias
-      if (buf[0] < limit) result += charset.charAt(buf[0] % charset.length);
+      if (buf[0]! < limit) result += charset.charAt(buf[0]! % charset.length);
     }
     return result;
   }

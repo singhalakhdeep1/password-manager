@@ -1,4 +1,4 @@
-import Dexie, { type Table } from "dexie";
+import { Dexie, type EntityTable } from "dexie";
 import type { EncryptedVault } from "@pwm/types";
 
 /** Serializable vault record for IndexedDB storage. */
@@ -19,20 +19,17 @@ export interface VaultSettingsRecord {
   deviceId: string;
 }
 
-class VaultDatabase extends Dexie {
-  vault!: Table<VaultRecord, string>;
-  settings!: Table<VaultSettingsRecord, string>;
+const vaultDb = new Dexie("pwm-vault") as Dexie & {
+  vault: EntityTable<VaultRecord, "id">;
+  settings: EntityTable<VaultSettingsRecord, "id">;
+};
 
-  constructor() {
-    super("pwm-vault");
-    this.version(1).stores({
-      vault: "id",
-      settings: "id",
-    });
-  }
-}
+vaultDb.version(1).stores({
+  vault: "id",
+  settings: "id",
+});
 
-export const vaultDb = new VaultDatabase();
+export { vaultDb };
 
 export function serializeVault(vault: EncryptedVault): VaultRecord {
   return {

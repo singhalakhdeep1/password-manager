@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isWebAuthnAvailable, credentialIdToBase64 } from "./index";
+import { isWebAuthnAvailable, credentialIdToBase64 } from "./index.js";
 
 describe("@pwm/webauthn", () => {
   it("isWebAuthnAvailable returns boolean", () => {

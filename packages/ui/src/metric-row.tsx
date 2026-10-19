@@ -1,5 +1,5 @@
 import { getRatingColorClass } from "@pwm/utils";
-import { cn } from "./cn";
+import { cn } from "./cn.js";
 
 interface MetricRowProps {
   name: string;

@@ -44,3 +44,12 @@ export async function copyWithAutoClear(text: string, clearAfterMs = 30_000): Pr
     void navigator.clipboard.writeText("").catch(() => {});
   }, clearAfterMs);
 }
+
+/** Returns a Tailwind color class for a performance rating. */
+export function getRatingColorClass(rating: "good" | "needs-improvement" | "poor"): string {
+  switch (rating) {
+    case "good": return "text-green-600";
+    case "needs-improvement": return "text-amber-500";
+    case "poor": return "text-red-500";
+  }
+}

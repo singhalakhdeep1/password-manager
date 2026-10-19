@@ -1,0 +1,13 @@
+services:
+  sync-server:
+    build: .
+    ports:
+      - "3199:3199"
+    volumes:
+      - sync-data:/app/apps/sync-server/data
+    environment:
+      - PORT=3199
+    restart: unless-stopped
+
+volumes:
+  sync-data:

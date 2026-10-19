@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assessStrength, calculateEntropy, generatePassphrase, generatePassword } from "./index";
+import { assessStrength, calculateEntropy, generatePassphrase, generatePassword } from "./index.js";
 
 describe("@pwm/generator", () => {
   it("generates password of requested length", () => {

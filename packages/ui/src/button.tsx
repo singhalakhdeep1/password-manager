@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from "react";
-import { cn } from "./cn";
+import { cn } from "./cn.js";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
 

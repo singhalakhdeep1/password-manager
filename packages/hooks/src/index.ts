@@ -66,7 +66,7 @@ export function useVaultState() {
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
-    const response = await sendToBackground<VaultState>(createMessage("VAULT_STATUS"));
+    const response = await sendToBackground<unknown, VaultState>(createMessage("VAULT_STATUS"));
     if (response.success && response.data) {
       setVaultState(response.data);
     }
@@ -98,7 +98,7 @@ export function useCredentials() {
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
-    const response = await sendToBackground<CredentialEntry[]>(createMessage("GET_CREDENTIALS"));
+    const response = await sendToBackground<unknown, CredentialEntry[]>(createMessage("GET_CREDENTIALS"));
     if (response.success && response.data) {
       setCredentials(response.data);
     } else {
@@ -121,7 +121,7 @@ export function useSecurityAudit() {
 
   const runAudit = useCallback(async () => {
     setIsLoading(true);
-    const response = await sendToBackground<SecurityFinding[]>(createMessage("SECURITY_AUDIT"));
+    const response = await sendToBackground<unknown, SecurityFinding[]>(createMessage("SECURITY_AUDIT"));
     if (response.success && response.data) {
       setFindings(response.data);
     }
@@ -136,7 +136,7 @@ export function useTOTPCodes() {
   const [codes, setCodes] = useState<TOTPCodeResponse[]>([]);
 
   const refresh = useCallback(async () => {
-    const response = await sendToBackground<TOTPCodeResponse[]>(createMessage("GET_TOTP_CODES"));
+    const response = await sendToBackground<unknown, TOTPCodeResponse[]>(createMessage("GET_TOTP_CODES"));
     if (response.success && response.data) {
       setCodes(response.data);
     }

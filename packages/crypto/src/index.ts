@@ -1,3 +1,5 @@
+import { argon2id } from "hash-wasm";
+
 /** Cryptographic constants for the vault (Module 2). */
 export const CRYPTO_CONFIG = {
   PBKDF2_ITERATIONS: 600_000,
@@ -6,6 +8,10 @@ export const CRYPTO_CONFIG = {
   KEY_LENGTH: 256,
   ALGORITHM: "AES-GCM" as const,
   HASH: "SHA-256" as const,
+  // OWASP-recommended minimums for Argon2id (2024 guidance): 19 MiB memory, 2 iterations, 1 lane.
+  ARGON2_MEMORY_KIB: 19_456,
+  ARGON2_ITERATIONS: 2,
+  ARGON2_PARALLELISM: 1,
 } as const;
 
 /** Generates a cryptographically secure random salt. */
@@ -35,7 +41,7 @@ export async function deriveKey(
   return crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
-      salt,
+      salt: salt as BufferSource,
       iterations: CRYPTO_CONFIG.PBKDF2_ITERATIONS,
       hash: CRYPTO_CONFIG.HASH,
     },
@@ -44,6 +50,39 @@ export async function deriveKey(
     false,
     ["encrypt", "decrypt"],
   );
+}
+
+/** Derives an AES-256 key from a master password using Argon2id (Module 2 — alternative KDF). */
+export async function deriveKeyArgon2(
+  masterPassword: string,
+  salt: Uint8Array,
+): Promise<CryptoKey> {
+  const rawKey = await argon2id({
+    password: masterPassword,
+    salt,
+    memorySize: CRYPTO_CONFIG.ARGON2_MEMORY_KIB,
+    iterations: CRYPTO_CONFIG.ARGON2_ITERATIONS,
+    parallelism: CRYPTO_CONFIG.ARGON2_PARALLELISM,
+    hashLength: CRYPTO_CONFIG.KEY_LENGTH / 8,
+    outputType: "binary",
+  });
+
+  return crypto.subtle.importKey(
+    "raw",
+    rawKey as BufferSource,
+    { name: CRYPTO_CONFIG.ALGORITHM, length: CRYPTO_CONFIG.KEY_LENGTH },
+    false,
+    ["encrypt", "decrypt"],
+  );
+}
+
+/** Derives the vault key using whichever KDF the vault was created with (defaults to PBKDF2). */
+export async function deriveVaultKey(
+  masterPassword: string,
+  salt: Uint8Array,
+  kdf: "PBKDF2" | "Argon2" = "PBKDF2",
+): Promise<CryptoKey> {
+  return kdf === "Argon2" ? deriveKeyArgon2(masterPassword, salt) : deriveKey(masterPassword, salt);
 }
 
 /** Encrypts data with AES-256-GCM (Module 2). */
@@ -55,7 +94,7 @@ export async function encrypt(
   const encoder = new TextEncoder();
   const usedIv = iv ?? generateIV();
   const ciphertext = await crypto.subtle.encrypt(
-    { name: CRYPTO_CONFIG.ALGORITHM, iv: usedIv },
+    { name: CRYPTO_CONFIG.ALGORITHM, iv: usedIv as BufferSource },
     key,
     encoder.encode(data),
   );
@@ -69,7 +108,7 @@ export async function decrypt(
   iv: Uint8Array,
 ): Promise<string> {
   const decrypted = await crypto.subtle.decrypt(
-    { name: CRYPTO_CONFIG.ALGORITHM, iv },
+    { name: CRYPTO_CONFIG.ALGORITHM, iv: iv as BufferSource },
     key,
     ciphertext,
   );

@@ -80,7 +80,7 @@ export function assessStrength(password: string): PasswordStrength {
   return { score, label, feedback, entropy: Math.round(entropy) };
 }
 
-import { DICEWARE_WORDS } from "./words";
+import { DICEWARE_WORDS } from "./words.js";
 
 /** Generates a Diceware-style passphrase (Module 4). */
 export function generatePassphrase(wordCount = 6, separator = "-"): string {

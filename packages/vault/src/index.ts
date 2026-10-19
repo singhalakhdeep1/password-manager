@@ -1,11 +1,11 @@
-import type { CredentialEntry, EncryptedVault, SecureNote, TOTPEntry, VaultFolder } from "@pwm/types";
+import type { CredentialEntry, EncryptedVault, SecureNote, TOTPEntry, VaultAttachment, VaultFolder } from "@pwm/types";
 import type { StoredPasskey } from "@pwm/webauthn";
-import { decrypt, deriveKey, encrypt, generateSalt } from "@pwm/crypto";
+import { decrypt, deriveVaultKey, encrypt, generateSalt } from "@pwm/crypto";
 import { generateId } from "@pwm/utils";
 
-export { loadEncryptedVault, saveEncryptedVault, vaultExists, loadSettings, saveSettings } from "./storage";
-export { scheduleAutoLock, resetAutoLockTimer, clearAutoLockTimer, getAutoLockMinutes } from "./auto-lock";
-export type { VaultSettingsRecord } from "./db";
+export { loadEncryptedVault, saveEncryptedVault, vaultExists, loadSettings, saveSettings } from "./storage.js";
+export { scheduleAutoLock, resetAutoLockTimer, clearAutoLockTimer, getAutoLockMinutes } from "./auto-lock.js";
+export type { VaultSettingsRecord } from "./db.js";
 
 /** In-memory vault state (cleared on lock). */
 export interface VaultData {
@@ -19,6 +19,7 @@ export interface VaultData {
 let vaultData: VaultData | null = null;
 let derivedKey: CryptoKey | null = null;
 let currentSalt: Uint8Array | null = null;
+let currentKdf: "PBKDF2" | "Argon2" = "PBKDF2";
 
 const EMPTY_VAULT: VaultData = {
   credentials: [],
@@ -29,12 +30,16 @@ const EMPTY_VAULT: VaultData = {
 };
 
 /** Creates a new empty vault with master password. */
-export async function createVault(masterPassword: string): Promise<VaultData> {
+export async function createVault(
+  masterPassword: string,
+  kdf: "PBKDF2" | "Argon2" = "PBKDF2",
+): Promise<VaultData> {
   const salt = generateSalt();
-  const key = await deriveKey(masterPassword, salt);
+  const key = await deriveVaultKey(masterPassword, salt, kdf);
   vaultData = { ...EMPTY_VAULT, credentials: [], notes: [], folders: [], totpEntries: [], passkeys: [] };
   derivedKey = key;
   currentSalt = salt;
+  currentKdf = kdf;
   return vaultData;
 }
 
@@ -43,7 +48,8 @@ export async function unlockVault(
   masterPassword: string,
   encrypted: EncryptedVault,
 ): Promise<VaultData> {
-  const key = await deriveKey(masterPassword, encrypted.salt);
+  const kdf = encrypted.kdf ?? "PBKDF2";
+  const key = await deriveVaultKey(masterPassword, encrypted.salt, kdf);
   const json = await decrypt(encrypted.ciphertext, key, encrypted.iv);
   const parsed = JSON.parse(json) as Partial<VaultData>;
   vaultData = {
@@ -55,6 +61,7 @@ export async function unlockVault(
   };
   derivedKey = key;
   currentSalt = encrypted.salt;
+  currentKdf = kdf;
   return vaultData;
 }
 
@@ -63,6 +70,7 @@ export function lockVault(): void {
   vaultData = null;
   derivedKey = null;
   currentSalt = null;
+  currentKdf = "PBKDF2";
 }
 
 /** Returns whether vault is currently unlocked. */
@@ -76,7 +84,7 @@ export async function encryptVault(): Promise<EncryptedVault> {
 
   const { ciphertext, iv } = await encrypt(JSON.stringify(vaultData), derivedKey);
 
-  return { ciphertext, iv, salt: currentSalt, version: 1, updatedAt: Date.now() };
+  return { ciphertext, iv, salt: currentSalt, version: 1, updatedAt: Date.now(), kdf: currentKdf };
 }
 
 /** Adds a credential to the unlocked vault. */

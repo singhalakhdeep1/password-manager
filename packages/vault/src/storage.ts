@@ -1,5 +1,5 @@
 import type { EncryptedVault } from "@pwm/types";
-import { deserializeVault, serializeVault, vaultDb, type VaultSettingsRecord } from "./db";
+import { deserializeVault, serializeVault, vaultDb, type VaultSettingsRecord } from "./db.js";
 
 const DEFAULT_SETTINGS: Omit<VaultSettingsRecord, "id"> = {
   autoLockMinutes: 15,

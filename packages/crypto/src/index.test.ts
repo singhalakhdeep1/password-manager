@@ -8,7 +8,7 @@ import {
   generateIV,
   generateSalt,
   sha256,
-} from "./index";
+} from "./index.js";
 
 describe("@pwm/crypto", () => {
   it("generates salt and IV of configured lengths", () => {

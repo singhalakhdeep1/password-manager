@@ -1,4 +1,4 @@
-import { lockVault } from "./index";
+import { lockVault } from "./index.js";
 
 let autoLockTimer: ReturnType<typeof setTimeout> | null = null;
 let autoLockMinutes = 15;

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { EncryptedVault } from "@pwm/types";
-import { getDeviceId, resolveConflict, queueSyncOperation, getOfflineQueue } from "./index";
+import { getDeviceId, resolveConflict, queueSyncOperation, getOfflineQueue } from "./index.js";
 
 function makeVault(updatedAt: number): EncryptedVault {
   return {

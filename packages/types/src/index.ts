@@ -11,6 +11,18 @@ export interface CredentialEntry {
   createdAt: number;
   updatedAt: number;
   expiresAt?: number;
+  attachments?: VaultAttachment[];
+}
+
+/** Encrypted file attached to a credential (Module 3 — vault attachments). */
+export interface VaultAttachment {
+  id: string;
+  filename: string;
+  mimeType: string;
+  size: number;
+  /** Base64-encoded file bytes. Persisted as part of the encrypted vault blob. */
+  dataBase64: string;
+  createdAt: number;
 }
 
 /** Secure note entry (non-login). */
@@ -39,6 +51,8 @@ export interface EncryptedVault {
   salt: Uint8Array;
   version: number;
   updatedAt: number;
+  /** Key derivation algorithm used to protect this blob. Absent = legacy PBKDF2 vault. */
+  kdf?: "PBKDF2" | "Argon2";
 }
 
 /** Master key derivation parameters. */
@@ -73,6 +87,10 @@ export interface TOTPEntry {
   algorithm: "SHA1" | "SHA256" | "SHA512";
   digits: 6 | 8;
   period: number;
+  /** SHA-256 hashes of unused one-time backup codes (plaintext shown once, never persisted). */
+  backupCodeHashes?: string[];
+  /** SHA-256 hashes of already-consumed backup codes, kept to reject replay. */
+  usedBackupCodeHashes?: string[];
 }
 
 /** Extension message types. */
@@ -102,10 +120,37 @@ export type MessageType =
   | "ADD_TOTP"
   | "SAVE_PASSKEY"
   | "ADD_NOTE"
-  | "ADD_FOLDER";
+  | "ADD_FOLDER"
+  | "ADD_ATTACHMENT"
+  | "REMOVE_ATTACHMENT"
+  | "GENERATE_BACKUP_CODES"
+  | "VERIFY_BACKUP_CODE";
 
 export interface VaultUnlockPayload {
   masterPassword: string;
+  /** Key derivation algorithm for new vault creation. Ignored when unlocking an existing vault. */
+  kdf?: "PBKDF2" | "Argon2";
+}
+
+export interface AddAttachmentPayload {
+  credentialId: string;
+  filename: string;
+  mimeType: string;
+  dataBase64: string;
+}
+
+export interface RemoveAttachmentPayload {
+  credentialId: string;
+  attachmentId: string;
+}
+
+export interface GenerateBackupCodesPayload {
+  totpId: string;
+}
+
+export interface VerifyBackupCodePayload {
+  totpId: string;
+  code: string;
 }
 
 export interface AutofillFillPayload {

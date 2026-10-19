@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TOTPEntry } from "@pwm/types";
-import { generateTOTP, getTOTPRemaining, parseOTPAuthURI } from "./index";
+import { generateTOTP, getTOTPRemaining, parseOTPAuthURI } from "./index.js";
 
 describe("@pwm/totp", () => {
   const entry: TOTPEntry = {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectHomograph, validateOrigin } from "./index";
+import { detectHomograph, validateOrigin } from "./index.js";
 
 describe("@pwm/autofill", () => {
   it("validateOrigin matches exact origins", () => {

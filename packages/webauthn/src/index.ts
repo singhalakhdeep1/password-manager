@@ -22,7 +22,7 @@ export async function createPasskeyOptions(
       challenge,
       rp: { id: rpId, name: "Password Manager" },
       user: {
-        id: userId,
+        id: userId as BufferSource,
         name: userName,
         displayName: userName,
       },
@@ -76,10 +76,10 @@ export async function registerPasskey(
   const stored: StoredPasskey = {
     id: crypto.randomUUID(),
     credentialId: credential.rawId,
-    publicKey: response.getPublicKey()?.buffer ?? new ArrayBuffer(0),
+    publicKey: response.getPublicKey()?.slice(0) ?? new ArrayBuffer(0),
     counter: 0,
     rpId,
-    userHandle: userId.buffer,
+    userHandle: userId.buffer as ArrayBuffer,
     createdAt: Date.now(),
   };
 

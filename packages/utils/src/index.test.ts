@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateId, maskString, safeJsonParse } from "./index";
+import { generateId, maskString, safeJsonParse } from "./index.js";
 
 describe("@pwm/utils", () => {
   it("generateId returns unique strings", () => {

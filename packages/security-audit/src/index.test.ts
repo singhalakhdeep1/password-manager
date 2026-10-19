@@ -5,7 +5,7 @@ import {
   detectReusedPasswords,
   detectWeakPasswords,
   runSecurityAudit,
-} from "./index";
+} from "./index.js";
 
 function makeCred(overrides: Partial<CredentialEntry> = {}): CredentialEntry {
   return {

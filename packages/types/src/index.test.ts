@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ExtensionMessage, CredentialEntry } from "./index";
+import type { ExtensionMessage, CredentialEntry } from "./index.js";
 
 describe("@pwm/types", () => {
   it("ExtensionMessage shape is valid", () => {
