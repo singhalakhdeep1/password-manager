@@ -10,6 +10,7 @@
   "dependencies": {
     "@pwm/hooks": "workspace:*",
     "@pwm/ui": "workspace:*",
+    "@pwm/utils": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

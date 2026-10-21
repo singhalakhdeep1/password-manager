@@ -20,5 +20,12 @@
     "../apps/options/**/*.ts",
     "../apps/options/**/*.tsx"
   ],
-  "exclude": ["dist", "node_modules"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "background/brave-service.ts",
+    "background/edge-service.ts",
+    "background/firefox-service.ts",
+    "background/safari-service.ts"
+  ]
 }

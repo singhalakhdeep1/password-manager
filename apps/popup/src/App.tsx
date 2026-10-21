@@ -31,14 +31,15 @@ export function App() {
 
   async function handleUnlock() {
     const res = await unlock(masterPassword);
-    setMessage(res.success ? "Vault unlocked" : res.error ?? "Unlock failed");
+    setMessage(res.success ? "Vault unlocked" : (res.error ?? "Unlock failed"));
     setMasterPassword("");
   }
 
   async function handleGenerate() {
-    const res = await sendToBackground<GeneratePasswordResponse>(
-      createMessage("GENERATE_PASSWORD", { length: 20, symbols: true }),
-    );
+    const res = await sendToBackground<
+      { length: number; symbols: boolean },
+      GeneratePasswordResponse
+    >(createMessage("GENERATE_PASSWORD", { length: 20, symbols: true }));
     if (res.success && res.data) {
       setGenerated(res.data.password);
       setMessage(`Strength: ${res.data.strength.label}`);
@@ -61,12 +62,15 @@ export function App() {
     const cred = data.credentials[0]!;
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id) return;
-    await chrome.tabs.sendMessage(tab.id, createMessage("AUTOFILL_FILL", {
-      credentialId: cred.id,
-      username: cred.username,
-      password: cred.password,
-      credentialUrl: cred.url,
-    }));
+    await chrome.tabs.sendMessage(
+      tab.id,
+      createMessage("AUTOFILL_FILL", {
+        credentialId: cred.id,
+        username: cred.username,
+        password: cred.password,
+        credentialUrl: cred.url,
+      }),
+    );
     setMessage(`Filled credentials for ${cred.username}`);
   }
 
@@ -77,10 +81,15 @@ export function App() {
       <main className="flex flex-1 flex-col gap-4 p-4">
         <div className="flex items-center justify-between">
           <StatusBadge label={connLabel} status={connStatus} />
-          <Button variant="ghost" onClick={() => void checkConnection()}>Refresh</Button>
+          <Button variant="ghost" onClick={() => void checkConnection()}>
+            Refresh
+          </Button>
         </div>
 
-        <Card title="Vault" description={isLocked ? "Enter master password" : `${credentials.length} credentials`}>
+        <Card
+          title="Vault"
+          description={isLocked ? "Enter master password" : `${credentials.length} credentials`}
+        >
           {vaultLoading ? (
             <p className="text-sm text-slate-500">Loading…</p>
           ) : isLocked ? (
@@ -92,7 +101,9 @@ export function App() {
                 value={masterPassword}
                 onChange={(e) => setMasterPassword(e.target.value)}
               />
-              <Button className="w-full" onClick={() => void handleUnlock()}>Unlock / Create Vault</Button>
+              <Button className="w-full" onClick={() => void handleUnlock()}>
+                Unlock / Create Vault
+              </Button>
             </div>
           ) : (
             <div className="space-y-2">
@@ -100,7 +111,9 @@ export function App() {
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
                 <span className="text-sm font-medium text-emerald-700">Unlocked</span>
               </div>
-              <Button variant="secondary" className="w-full" onClick={() => void lock()}>Lock Vault</Button>
+              <Button variant="secondary" className="w-full" onClick={() => void lock()}>
+                Lock Vault
+              </Button>
             </div>
           )}
         </Card>
@@ -124,7 +137,11 @@ export function App() {
             <Button
               variant="ghost"
               className="mt-2 text-xs"
-              onClick={() => void copyWithAutoClear(generated).then(() => setMessage("Copied (auto-clears in 30s)"))}
+              onClick={() =>
+                void copyWithAutoClear(generated).then(() =>
+                  setMessage("Copied (auto-clears in 30s)"),
+                )
+              }
             >
               Copy
             </Button>
@@ -133,7 +150,11 @@ export function App() {
 
         {message && <p className="text-xs text-slate-500">{message}</p>}
 
-        <Button variant="secondary" className="w-full" onClick={() => chrome.runtime.openOptionsPage()}>
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={() => chrome.runtime.openOptionsPage()}
+        >
           Settings
         </Button>
       </main>

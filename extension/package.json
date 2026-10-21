@@ -19,7 +19,8 @@
     "@pwm/security-audit": "workspace:*",
     "@pwm/sync": "workspace:*",
     "@pwm/totp": "workspace:*",
-    "@pwm/autofill": "workspace:*"
+    "@pwm/autofill": "workspace:*",
+    "@pwm/webauthn": "workspace:*"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.31",
